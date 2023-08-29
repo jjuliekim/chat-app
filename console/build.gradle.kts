@@ -1,18 +1,19 @@
 plugins {
-    id("java")
-}
-
-group = "me.julie"
-
-repositories {
-    mavenCentral()
+    application
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("com.neovisionaries:nv-websocket-client:2.14")
+    implementation("com.github.exoad:ansicolor:68731f2778")
 }
 
-tasks.test {
-    useJUnitPlatform()
+application {
+    mainClass = "me.julie.chatlink.console.Main"
+}
+
+tasks {
+    getByName<JavaExec>("run") {
+        standardInput = System.`in`
+    }
 }

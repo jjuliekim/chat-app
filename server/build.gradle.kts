@@ -1,18 +1,13 @@
 plugins {
-    id("java")
-}
-
-group = "me.julie"
-
-repositories {
-    mavenCentral()
+    application
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("io.javalin:javalin:5.6.1")
+    implementation("org.slf4j:slf4j-simple:2.0.7")
 }
 
-tasks.test {
-    useJUnitPlatform()
+application {
+    mainClass.set("me.julie.chatlink.server.Main")
 }
