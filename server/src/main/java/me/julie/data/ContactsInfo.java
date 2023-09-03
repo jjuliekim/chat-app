@@ -4,6 +4,7 @@ public class ContactsInfo {
     private String username;
     private String displayName;
 
+    // for each user's own view of their contacts
     public ContactsInfo(String username, String displayName) {
         this.username = username;
         this.displayName = displayName;

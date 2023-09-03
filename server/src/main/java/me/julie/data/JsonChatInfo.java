@@ -4,19 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonChatInfo {
-    private Map<List<String>, List<Chat>> chatLogs;
+    private Map<Integer, List<Message>> chatLogs;
 
-    // <(list of) usernames, (list of) chat messages>
+    // <unique chat id, (list of) chat messages>
     // every conversation created in this app
-    public JsonChatInfo(Map<List<String>, List<Chat>> chatLogs) {
+    public JsonChatInfo(Map<Integer, List<Message>> chatLogs) {
         this.chatLogs = chatLogs;
     }
 
-    public Map<List<String>, List<Chat>> getChatLogs() {
+    public Map<Integer, List<Message>> getChatLogs() {
         return chatLogs;
     }
 
-    public void setChatLogs(Map<List<String>, List<Chat>> chatLogs) {
+    public void setChatLogs(Map<Integer, List<Message>> chatLogs) {
         this.chatLogs = chatLogs;
     }
 }

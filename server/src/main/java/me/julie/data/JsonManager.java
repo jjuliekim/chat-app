@@ -15,15 +15,21 @@ public class JsonManager {
 
     private JsonLoginInfo loginInfo;
     private JsonChatInfo chatInfo;
+    private JsonChatId chatId;
+    private JsonUserId userId;
 
     public void load() throws IOException {
         loginInfo = loadFromFile("logins.json", JsonLoginInfo.class, new JsonLoginInfo(new HashMap<>()));
         chatInfo = loadFromFile("chatLogs.json", JsonChatInfo.class, new JsonChatInfo(new HashMap<>()));
+        chatId = loadFromFile("chatIds.json", JsonChatId.class, new JsonChatId(new HashMap<>()));
+        userId = loadFromFile("userIds.json", JsonUserId.class, new JsonUserId(new HashMap<>()));
     }
 
     public void save() throws IOException {
         saveToFile("logins.json", loginInfo);
         saveToFile("chatLogs.json", chatInfo);
+        saveToFile("chatIds.json", chatId);
+        saveToFile("userIds.json", userId);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -59,5 +65,21 @@ public class JsonManager {
 
     public void setChatInfo(JsonChatInfo chatInfo) {
         this.chatInfo = chatInfo;
+    }
+
+    public JsonChatId getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(JsonChatId chatId) {
+        this.chatId = chatId;
+    }
+
+    public JsonUserId getUserId() {
+        return userId;
+    }
+
+    public void setUserId(JsonUserId userId) {
+        this.userId = userId;
     }
 }

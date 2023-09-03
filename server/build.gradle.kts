@@ -9,5 +9,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("me.julie.chatlink.server.Main")
+    mainClass.set("me.julie.Main")
 }

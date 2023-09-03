@@ -9,7 +9,7 @@ dependencies {
 }
 
 application {
-    mainClass = "me.julie.chatlink.console.Main"
+    mainClass = "me.julie.Main"
 }
 
 tasks {

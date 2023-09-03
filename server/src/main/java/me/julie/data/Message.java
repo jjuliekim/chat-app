@@ -1,22 +1,22 @@
 package me.julie.data;
 
-public class Chat {
+public class Message {
     private String sender;
-    private String message;
+    private String text;
     private String date;
     private String time;
 
-    public Chat(String sender, String message, String date, String time) {
+    public Message(String sender, String text, String date, String time) {
         this.sender = sender;
-        this.message = message;
+        this.text = text;
         this.date = date;
         this.time = time;
     }
 
     // date and time are not needed/recorded
-    public Chat(String sender, String message) {
+    public Message(String sender, String text) {
         this.sender = sender;
-        this.message = message;
+        this.text = text;
         this.date = "";
         this.time = "";
     }
@@ -29,12 +29,12 @@ public class Chat {
         this.sender = sender;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getDate() {
