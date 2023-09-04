@@ -70,6 +70,82 @@ public class ClientManager {
                     System.out.println("will display the main menu");
                     mainMenu();
                 }
+
+                // contacts menu
+                if (message.equals("displayContactsMenu%")) {
+                    contactsMenu();
+                }
+
+                // list of contacts for contacts menu
+                if (message.startsWith("contactName%")) {
+                    String[] info = message.split("%");
+                    String index = info[1];
+                    String displayName = info[2];
+                    printReset(BOLD + hex("#ebac1a") + "[" + index + "] ");
+                    printlnReset(BOLD + displayName);
+                }
+
+                // rest of contacts menu
+                if (message.startsWith("getContactMenuInput%")) {
+                    String[] info = message.split("%");
+                    int numOfContacts = Integer.parseInt(info[1]);
+                    System.out.print("-> ");
+                    String input = scanner.nextLine();
+                    if (input.equalsIgnoreCase("back")) {
+                        mainMenu();
+                        return;
+                    }
+                    if (input.equalsIgnoreCase("new")) {
+                        System.out.print("New contact username -> ");
+                        String contactName = scanner.nextLine();
+                        ws.sendText("addContact%" + contactName);
+                        return;
+                    }
+                    try {
+                        if (Integer.parseInt(input) <= numOfContacts) {
+                            ws.sendText("getContactInfo%" + input);
+                        }
+                    } catch (NumberFormatException ignored) {
+                        printlnReset(RED + ITALICS + "[INVALID OPTION]");
+                        contactsMenu();
+                    }
+                }
+
+                // individual contact's info/settings
+                if (message.startsWith("contactInfo%")) {
+                    String[] info = message.split("%");
+                    String contactUsername = info[1];
+                    String contactDisplayName = info[2];
+                    System.out.println();
+                    System.out.println("username: " + contactUsername);
+                    System.out.println("display: " + contactDisplayName);
+                    printlnReset(BOLD + hex("#f5d773") + info[1]);
+                    printReset(BOLD + hex("#ebac1a") + "[1] ");
+                    printlnReset(BOLD + "Change display name");
+                    printReset(BOLD + hex("#ebac1a") + "[2] ");
+                    printlnReset(BOLD + "Remove contact");
+                    printReset(BOLD + hex("#ebac1a") + "[3] ");
+                    printlnReset(BOLD + "Open conversation");
+                    printReset(BOLD + hex("#ebac1a") + "[4] ");
+                    printlnReset(BOLD + "Back");
+                    System.out.print("-> ");
+
+                    String input = scanner.nextLine();
+                    switch (input) {
+                        case "1" -> {
+                            System.out.println("Current display name -> " + contactDisplayName);
+                            System.out.print("New display name -> ");
+                            String newName = scanner.nextLine();
+                            ws.sendText("changeDisplayName%" + contactUsername + "%" + newName);
+                        }
+                        case "2" -> ws.sendText("removeContact%" + contactUsername);
+                        case "3" -> {
+                            System.out.println("opening conversation with " + contactDisplayName);
+                        }
+                        case "4" -> contactsMenu();
+                    }
+                }
+
             }
         });
 
@@ -105,7 +181,10 @@ public class ClientManager {
 
     // displays the contacts menu
     private void contactsMenu() {
-        System.out.println("user pressed 1, displaying contacts");
+        System.out.println();
+        printlnReset(BOLD + hex("#f5d773") + "== Contacts ==");
+        printlnReset(BOLD + hex("#ebac1a") + "[BACK]  [NEW]");
+        ws.sendText("allContactNames%");
     }
 
     // displays the messages menu

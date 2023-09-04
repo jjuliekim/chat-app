@@ -2,6 +2,7 @@ package me.julie;
 
 import io.javalin.Javalin;
 import io.javalin.websocket.WsContext;
+import me.julie.data.ContactsInfo;
 import me.julie.data.JsonManager;
 import me.julie.data.User;
 
@@ -21,6 +22,8 @@ public class ServerManager {
         app.ws("/chat", ws -> {
             ws.onMessage(ctx -> { // when a message is received by/sent to the server
                 System.out.println("server received: " + ctx.message());
+
+                // ===== start up / log in =====
                 // check if username has existing data
                 if (ctx.message().startsWith("username%")) {
                     String[] info = ctx.message().split("%");
@@ -63,10 +66,53 @@ public class ServerManager {
                         ctx.send("greenSystemMsg%Welcome back " + user.getDisplayName() + "!");
                         ctx.send("displayMenu%");
                     } else {
-                        ctx.send("redSystemMsg%Incorrect password.");
+                        ctx.send("redSystemMsg%[Username already exists or incorrect password]");
                         ctx.send("login%");
                     }
                 }
+
+                // ===== contacts =====
+                // sends [#] contact's display name
+                if (ctx.message().equals("allContactNames%")) {
+                    User user = jsonManager.getLoginInfo().getLogins().get(connections.get(ctx));
+                    int index = 1;
+                    if (!user.getContacts().isEmpty()) {
+                        for (ContactsInfo contact : user.getContacts()) {
+                            ctx.send("contactName%" + index + "%" + contact.getDisplayName());
+                            index++;
+                        }
+                    }
+                    ctx.send("getContactMenuInput%" + index);
+                }
+
+                // get and send contact's info
+                if (ctx.message().startsWith("getContactInfo%")) {
+                    String[] info = ctx.message().split("%");
+                    int index = Integer.parseInt(info[1]);
+                    ContactsInfo contact = jsonManager.getLoginInfo().getLogins().get(connections.get(ctx))
+                            .getContacts().get(index - 1);
+                    ctx.send("contactInfo%" + contact.getUsername() + "%" + contact.getDisplayName());
+                }
+
+                // add contact
+                if (ctx.message().startsWith("addContact%")) {
+                    String[] info = ctx.message().split("%");
+                    String contactUsername = info[1];
+                    if (!jsonManager.getLoginInfo().getLogins().containsKey(contactUsername)) {
+                        ctx.send("redSystemMsg%[User does not exist]");
+                        ctx.send("displayContactsMenu%");
+                    } else {
+                        jsonManager.getLoginInfo().getLogins().get(connections.get(ctx)).getContacts()
+                                .add(new ContactsInfo(contactUsername,
+                                        jsonManager.getLoginInfo().getLogins().get(contactUsername).getDisplayName()));
+                        jsonManager.save();
+                        ctx.send("greenSystemMsg%[Contact added]");
+                    }
+                    ctx.send("displayContactsMenu%");
+                }
+
+                // remove contact
+
 
             });
             ws.onClose(connections::remove);
