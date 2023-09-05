@@ -27,9 +27,7 @@ public class ClientManager {
             System.out.println();
             System.out.println();
             printlnReset(GREEN + "Connected to server!");
-            printReset(BOLD + "Username -> ");
-            username = scanner.nextLine();
-            ws.sendText("username%" + username);
+            usernamePrompt();
         } catch (WebSocketException e) {
             System.err.println("Failed to connect to server: " + e.getMessage());
         }
@@ -47,6 +45,11 @@ public class ClientManager {
                 // server sends client a message that should be displayed in red
                 if (message.startsWith("redSystemMsg%")) {
                     printlnReset(RED + message.substring(13));
+                }
+
+                // enter username prompt
+                if (message.equals("usernamePrompt%")) {
+                    usernamePrompt();
                 }
 
                 // username does not exist yet/signing up
@@ -67,7 +70,6 @@ public class ClientManager {
 
                 // main menu
                 if (message.equals("displayMenu%")) {
-                    System.out.println("will display the main menu");
                     mainMenu();
                 }
 
@@ -117,9 +119,9 @@ public class ClientManager {
                     String contactUsername = info[1];
                     String contactDisplayName = info[2];
                     System.out.println();
+                    printlnReset(BOLD + hex("#f5d773") + "Contact Information");
                     System.out.println("username: " + contactUsername);
                     System.out.println("display: " + contactDisplayName);
-                    printlnReset(BOLD + hex("#f5d773") + info[1]);
                     printReset(BOLD + hex("#ebac1a") + "[1] ");
                     printlnReset(BOLD + "Change display name");
                     printReset(BOLD + hex("#ebac1a") + "[2] ");
@@ -152,6 +154,12 @@ public class ClientManager {
 
     }
 
+    private void usernamePrompt() {
+        printReset(BOLD + "Username -> ");
+        username = scanner.nextLine();
+        ws.sendText("username%" + username);
+    }
+
     // displays the chat app menu
     private void mainMenu() {
         LocalDateTime now = LocalDateTime.now();
@@ -173,7 +181,7 @@ public class ClientManager {
             case "2" -> messagesMenu();
             case "3" -> settingsMenu();
             default -> {
-                printlnReset(RED + ITALICS + "Invalid input.");
+                printlnReset(RED + ITALICS + "[INVALID OPTION]");
                 mainMenu();
             }
         }

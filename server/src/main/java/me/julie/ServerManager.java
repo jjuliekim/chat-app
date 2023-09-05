@@ -42,7 +42,6 @@ public class ServerManager {
                     while (jsonManager.getUserId().getUserIds().containsKey(id)) {
                         id = random.nextInt(100, 1000);
                     }
-                    System.out.println("server putting id into jsons");
                     jsonManager.getUserId().getUserIds().put(id, info[1]);
                     jsonManager.getLoginInfo().getLogins().put(info[1],
                             new User(info[1], info[2], info[3], id, new ArrayList<>()));
@@ -64,7 +63,7 @@ public class ServerManager {
                         ctx.send("displayMenu%");
                     } else {
                         ctx.send("redSystemMsg%[Username already exists or incorrect password]");
-                        ctx.send("login%");
+                        ctx.send("usernamePrompt%");
                     }
                 }
 
@@ -97,7 +96,6 @@ public class ServerManager {
                     String contactUsername = info[1];
                     if (!jsonManager.getLoginInfo().getLogins().containsKey(contactUsername)) {
                         ctx.send("redSystemMsg%[User does not exist]");
-                        ctx.send("displayContactsMenu%");
                     } else {
                         jsonManager.getLoginInfo().getLogins().get(connections.get(ctx)).getContacts()
                                 .add(new ContactsInfo(contactUsername,

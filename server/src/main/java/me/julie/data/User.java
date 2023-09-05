@@ -14,6 +14,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.displayName = displayName;
+        this.id = id;
         this.contacts = contacts;
     }
 
