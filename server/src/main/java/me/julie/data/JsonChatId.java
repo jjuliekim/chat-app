@@ -6,7 +6,7 @@ import java.util.Map;
 public class JsonChatId {
     private Map<List<String>, Integer> chatIds;
 
-    // <(list of) usernames, unique group chat id>
+    // <list of usernames, unique chat id>
     public JsonChatId(Map<List<String>, Integer> chatIds) {
         this.chatIds = chatIds;
     }

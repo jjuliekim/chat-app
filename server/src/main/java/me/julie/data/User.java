@@ -1,5 +1,6 @@
 package me.julie.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -13,7 +14,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.displayName = displayName;
-        this.id = id;
         this.contacts = contacts;
     }
 
@@ -55,5 +55,13 @@ public class User {
 
     public void setContacts(List<ContactsInfo> contacts) {
         this.contacts = contacts;
+    }
+
+    public ArrayList<String> getContactUsernames() {
+        ArrayList<String> contactUsernames = new ArrayList<>();
+        for (ContactsInfo contact : contacts) {
+            contactUsernames.add(contact.getUsername());
+        }
+        return contactUsernames;
     }
 }

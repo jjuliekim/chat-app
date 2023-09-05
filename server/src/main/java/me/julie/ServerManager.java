@@ -7,10 +7,7 @@ import me.julie.data.JsonManager;
 import me.julie.data.User;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class ServerManager {
     private final JsonManager jsonManager = new JsonManager();
@@ -111,8 +108,38 @@ public class ServerManager {
                     ctx.send("displayContactsMenu%");
                 }
 
-                // remove contact
+                // remove contact & conversation log
+                if (ctx.message().startsWith("removeContact%")) {
+                    String[] info = ctx.message().split("%");
+                    String username = info[1];
+                    int indexOfName = jsonManager.getLoginInfo().getLogins().get(connections.get(ctx))
+                            .getContactUsernames().indexOf(username);
+                    jsonManager.getLoginInfo().getLogins().get(connections.get(ctx)).getContacts().remove(indexOfName);
+                    for (List<String> groupChat : jsonManager.getChatId().getChatIds().keySet()) {
+                        if (groupChat.contains(username) && groupChat.contains(connections.get(ctx))) {
+                            jsonManager.getChatId().getChatIds().remove(groupChat);
+                            int chatId = jsonManager.getChatId().getChatIds().get(groupChat);
+                            jsonManager.getChatInfo().getChatLogs().remove(chatId);
+                        }
+                    }
+                    jsonManager.save();
+                    ctx.send("greenSystemMsg%[CONTACT REMOVED]");
+                    ctx.send("displayContactsMenu%");
+                }
 
+                // change contact's display name
+                if (ctx.message().startsWith("changeDisplayName%")) {
+                    String[] info = ctx.message().split("%");
+                    int indexOfContact = jsonManager.getLoginInfo().getLogins().get(connections.get(ctx))
+                            .getContactUsernames().indexOf(info[1]);
+                    jsonManager.getLoginInfo().getLogins().get(connections.get(ctx)).getContacts()
+                            .get(indexOfContact).setDisplayName(info[2]);
+                    jsonManager.save();
+                    ctx.send("greenSystemMsg%[DISPLAY NAME CHANGED]");
+                    ctx.send("displayContactsMenu%");
+                }
+
+                // ===== chats =====
 
             });
             ws.onClose(connections::remove);
